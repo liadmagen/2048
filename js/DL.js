@@ -143,6 +143,7 @@ DeepLearning.prototype = {
         this.backward(this.currentGameGrid);
         this.draw_stats();
         this.draw_net();
+        this.brain.visSelf(document.getElementById('brain_info_div'));
     },
 
     backward: function (lastGameGrid) {
