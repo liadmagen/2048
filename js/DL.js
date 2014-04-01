@@ -164,7 +164,7 @@ DeepLearning.prototype = {
         if (this.gameManager.over) {
             setTimeout(function() {
                 document.getElementsByClassName('retry-button')[0].click();
-            }, 1500);
+            }, 5);
             reward = -10;
         }
 
