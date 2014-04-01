@@ -145,6 +145,7 @@ DeepLearning.prototype = {
             return;
         }
 
+        console.log('reward: ' + reward);
         this.brain.backward(reward);
     },
 
