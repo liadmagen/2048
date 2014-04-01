@@ -167,10 +167,11 @@ DeepLearning.prototype = {
         }
 
         if (this.gameManager.over) {
-            setTimeout((function() {
-                this.gameManager.storageManager.setAIState(this.brain.value_net.toJSON());
+            var _this = this;
+            setTimeout(function() {
+                _this.gameManager.storageManager.setAIState(_this.brain.value_net.toJSON());
                 document.getElementsByClassName('retry-button')[0].click();
-            }).bind(this), 5);
+            }, 5);
             reward = -10;
         }
 
