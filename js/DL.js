@@ -141,6 +141,8 @@ DeepLearning.prototype = {
                 this.simulateKeyPress(40);
         }
         this.backward(this.currentGameGrid);
+        this.draw_stats();
+        this.draw_net();
     },
 
     backward: function (lastGameGrid) {
