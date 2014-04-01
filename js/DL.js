@@ -145,6 +145,9 @@ DeepLearning.prototype = {
         this.lastScore = this.gameManager.score;
 
         // no change was done? bad reward
+        console.log(this.currentGameGrid.newGrid);
+        console.log(lastGameGrid.newGrid);
+        console.log(lastGameGrid.newGrid.compare(this.currentGameGrid.newGrid));
         if (lastGameGrid.newGrid.compare(this.currentGameGrid.newGrid)) {
             console.log('no movement were done');
             return this.brain.backward(-1);
