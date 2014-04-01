@@ -145,20 +145,20 @@ DeepLearning.prototype = {
         this.lastScore = this.gameManager.score;
 
         // no change was done? bad reward
-        if (lastGameGrid.newGrid.compare(this.currentGameGrid.newGrid)) {
-            console.log('reward: -1');
-            return this.brain.backward(-1);
-        }
+        // if (lastGameGrid.newGrid.compare(this.currentGameGrid.newGrid)) {
+        //     console.log('reward: 0');
+        //     return this.brain.backward(0);
+        // }
 
         // awarding for more empty cells
         //if (this.currentGameGrid.emptyCount > lastGameGrid.emptyCount) {
         //    reward += (16 / (lastGameGrid.emptyCount - this.currentGameGrid.emptyCount));
         //}
 
-        reward += scoreDelta / 1000;
+        reward += scoreDelta; // / 1000;
 
         if (this.gameManager.won) {
-            reward += 10;
+            reward += 2048;
         }
 
         if (this.gameManager.over) {
