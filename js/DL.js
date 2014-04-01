@@ -239,11 +239,9 @@ DeepLearning.prototype = {
       }
       ctx.stroke();
       
-      if(w.clock % 200 === 0) {
-        this.reward_graph.add(w.clock/200, b.average_reward_window.get_average());
+        this.reward_graph.add(1, b.average_reward_window.get_average());
         var gcanvas = document.getElementById("graph_canvas");
         this.reward_graph.drawSelf(gcanvas);
-      }
     }
 
 
