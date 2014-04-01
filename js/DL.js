@@ -146,8 +146,8 @@ DeepLearning.prototype = {
 
         // no change was done? bad reward
         if (lastGameGrid.newGrid.compare(this.currentGameGrid.newGrid)) {
-            this.brain.backward(-1);
-            return;
+            console.log('no movement were done');
+            return this.brain.backward(-1);
         }
 
         // awarding for more empty cells
