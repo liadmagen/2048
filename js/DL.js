@@ -145,11 +145,8 @@ DeepLearning.prototype = {
         this.lastScore = this.gameManager.score;
 
         // no change was done? bad reward
-        console.log(this.currentGameGrid.newGrid);
-        console.log(lastGameGrid.newGrid);
-        console.log(lastGameGrid.newGrid.compare(this.currentGameGrid.newGrid));
         if (lastGameGrid.newGrid.compare(this.currentGameGrid.newGrid)) {
-            console.log('no movement were done');
+            console.log('reward: -1');
             return this.brain.backward(-1);
         }
 
@@ -165,11 +162,10 @@ DeepLearning.prototype = {
         }
 
         if (this.gameManager.over) {
-            this.brain.backward(-10);
             setTimeout(function() {
                 document.getElementsByClassName('retry-button')[0].click();
             }, 1500);
-            return;
+            reward = -10;
         }
 
         console.log('reward: ' + reward);
