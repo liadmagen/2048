@@ -59,7 +59,11 @@ function DeepLearning(gameManager) {
     opt.tdtrainer_options = tdtrainer_options;
 
     this.brain = new deepqlearn.Brain(num_inputs, num_actions, opt); // woohoo
-    this.brain.value_net.fromJSON(this.gameManager.storageManager.getAIState());
+    var lastLearningState = this.gameManager.storageManager.getAIState();
+    if (lastLearningState) {
+        this.brain.value_net.fromJSON(lastLearningState);
+    }
+    
 
     document.getElementsByClassName('restart-button')[0].onclick = this.start();
 }
