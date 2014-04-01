@@ -150,14 +150,18 @@ DeepLearning.prototype = {
         var reward = 0;
 
         var scoreDelta = this.gameManager.score - this.lastScore;
+        if (scoreDelta < 0) {
+            scoreDelta = -10; // new Game probably
+        }
         this.currentGameGrid = this.convertGrid(this.gameManager.grid);
         this.lastScore = this.gameManager.score;
 
         // no change was done? bad reward
-        // if (lastGameGrid.newGrid.compare(this.currentGameGrid.newGrid)) {
-        //     console.log('reward: 0');
-        //     return this.brain.backward(0);
-        // }
+        if (lastGameGrid.newGrid.compare(this.currentGameGrid.newGrid)) {
+            //console.log('reward: 0');
+            //return this.brain.backward(0);
+            reward = reward - 1;
+        }
 
         // awarding for more empty cells
         //if (this.currentGameGrid.emptyCount > lastGameGrid.emptyCount) {
@@ -176,7 +180,7 @@ DeepLearning.prototype = {
                 _this.gameManager.storageManager.setAIState(_this.brain.value_net.toJSON());
                 document.getElementsByClassName('retry-button')[0].click();
             }, 5);
-            reward = -10;
+            //reward = -10;
         }
 
         console.log('reward: ' + reward);
