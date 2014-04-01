@@ -26,7 +26,7 @@ function DeepLearning(gameManager) {
     this.gameManager = gameManager;
     this.lastScore = this.gameManager.score;
     this.lastGameGrid = this.convertGrid(this.gameManager.grid);
-
+    
     var num_inputs = 16;
     var num_actions = 4;
     var temporal_window = 1; // amount of temporal memory. 0 = agent lives in-the-moment :)
@@ -59,6 +59,7 @@ function DeepLearning(gameManager) {
     opt.tdtrainer_options = tdtrainer_options;
 
     this.brain = new deepqlearn.Brain(num_inputs, num_actions, opt); // woohoo
+    this.brain.value_net.fromJSON(this.gameManager.storageManager.getAIState());
 
     document.getElementsByClassName('restart-button')[0].onclick = this.start();
 }
@@ -163,6 +164,7 @@ DeepLearning.prototype = {
 
         if (this.gameManager.over) {
             setTimeout(function() {
+                this.gameManager.storageManager.setAIState(this.brain.value_net.toJSON());
                 document.getElementsByClassName('retry-button')[0].click();
             }, 5);
             reward = -10;
