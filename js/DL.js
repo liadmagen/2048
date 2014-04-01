@@ -127,9 +127,9 @@ DeepLearning.prototype = {
         }
 
         // awarding for more empty cells
-        if (this.currentGameGrid.emptyCount > lastGameGrid.emptyCount) {
-            reward += 16 / (lastGameGrid.emptyCount - this.currentGameGrid.emptyCount);
-        }
+        //if (this.currentGameGrid.emptyCount > lastGameGrid.emptyCount) {
+        //    reward += (16 / (lastGameGrid.emptyCount - this.currentGameGrid.emptyCount));
+        //}
 
         reward += scoreDelta / 1000;
 
