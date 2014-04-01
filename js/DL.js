@@ -150,6 +150,6 @@ DeepLearning.prototype = {
     },
 
     start: function() {
-        this.interval = setInterval(this.makeAction.bind(this), 1000);
+        this.interval = setInterval(this.makeAction.bind(this), 300);
     }
 }
