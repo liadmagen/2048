@@ -225,8 +225,7 @@ DeepLearning.prototype = {
       var W = canvas.width;
       var H = canvas.height;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      var a = w.agents[0];
-      var b = a.brain;
+      var b = this.brain;
       var netin = b.last_input_array;
       ctx.strokeStyle = "rgb(0,0,0)";
       //ctx.font="12px Verdana";
