@@ -38,7 +38,7 @@ function DeepLearning(gameManager) {
     // to just insert simple relu hidden layers.
     var layer_defs = [];
     layer_defs.push({type:'input', out_sx:1, out_sy:1, out_depth:network_size});
-    layer_defs.push({type:'fc', num_neurons: 50, activation:'relu'});
+    layer_defs.push({type:'fc', num_neurons: 50, activation:'sigmoid'});
     layer_defs.push({type:'fc', num_neurons: 50, activation:'relu'});
     layer_defs.push({type:'regression', num_neurons:num_actions});
 
