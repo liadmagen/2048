@@ -28,7 +28,7 @@ function DeepLearning(gameManager) {
     this.lastGameGrid = this.convertGrid(this.gameManager.grid);
     
     var num_inputs = 16;
-    var num_actions = 4;
+    var num_actions = 5;
     var temporal_window = 1; // amount of temporal memory. 0 = agent lives in-the-moment :)
     var network_size = num_inputs*temporal_window + num_actions*temporal_window + num_inputs;
 
@@ -38,7 +38,8 @@ function DeepLearning(gameManager) {
     // to just insert simple relu hidden layers.
     var layer_defs = [];
     layer_defs.push({type:'input', out_sx:1, out_sy:1, out_depth:network_size});
-    layer_defs.push({type:'fc', num_neurons: 50, activation:'sigmoid'});
+    layer_defs.push({type:'fc', num_neurons: 50, activation:'relu'});
+    layer_defs.push({type:'fc', num_neurons: 50, activation:'relu'});
     layer_defs.push({type:'fc', num_neurons: 50, activation:'relu'});
     layer_defs.push({type:'regression', num_neurons:num_actions});
 
@@ -108,14 +109,14 @@ DeepLearning.prototype = {
             emptyCount: 0
         }
         for (i=0; i<grid.size; i++) {
-            result.newGrid[i] = [];
             for(j=0; j<grid.size; j++) {
+                var location = i*4 + j;
                 if (grid.cells[i][j]) {
-                    result.newGrid[i][j] = grid.cells[i][j].value;
+                    result.newGrid[location] = grid.cells[i][j].value;
                     result.max = result.max < grid.cells[i][j].value ? grid.cells[i][j].value : result.max;
                 }
                 else {
-                    result.newGrid[i][j] = 0;
+                    result.newGrid[location] = 0;
                     result.emptyCount++;
                 }
 
@@ -127,6 +128,10 @@ DeepLearning.prototype = {
     makeAction: function () {
         this.currentGameGrid = this.convertGrid(this.gameManager.grid);
         var actionId = this.brain.forward(this.currentGameGrid.newGrid);
+        if(actionId > 3) {
+            console.warn('action: ' + actionId);
+        }
+
         switch (actionId) {
             case 0:
                 this.simulateKeyPress(37);
@@ -152,41 +157,68 @@ DeepLearning.prototype = {
     },
 
     backward: function (lastGameGrid) {
+        var score = this.gameManager.score;
         var reward = 0;
-
-        var scoreDelta = this.gameManager.score - this.lastScore;
-        if (scoreDelta < 0) {
-            scoreDelta = -10; // new Game probably
-        }
+        var maxScore = this.gameManager.storageManager.getBestScore();
         this.currentGameGrid = this.convertGrid(this.gameManager.grid);
-        this.lastScore = this.gameManager.score;
 
-        // no change was done? bad reward
-        if (lastGameGrid.newGrid.compare(this.currentGameGrid.newGrid)) {
-            //console.log('reward: 0');
-            //return this.brain.backward(0);
-            reward = reward - 1;
+        if (score > 0) {
+            reward += Math.log(score) / Math.log(2);
         }
+
+        if (score >= maxScore) {
+            reward = reward + 1;
+        }
+
+        if (lastGameGrid.max < this.currentGameGrid.max) {
+            var delta = (this.currentGameGrid.max - lastGameGrid.max);
+            reward += Math.log(delta) / Math.log(2);
+        }
+
+        if (lastGameGrid.emptyCount !== 0)
+
+//        var scoreDelta = this.gameManager.score - this.lastScore;
+//        if (scoreDelta <= 0 && score === 0 && lastGameGrid.emptyCount > 0) {
+//            reward = reward - 4;
+//        }
+//
+//        if (scoreDelta < 0 && score === 0) {
+//            scoreDelta = -1; // new Game
+//        }
+//        else {
+//            scoreDelta = 2 + scoreDelta / 10;
+//        }
+//
+//        reward = reward + scoreDelta;
+//
+//        this.lastScore = this.gameManager.score;
+//
+//        // no change was done? bad reward
+//        if (lastGameGrid.newGrid.compare(this.currentGameGrid.newGrid)) {
+//            //console.log('reward: 0');
+//            //return this.brain.backward(0);
+//            reward = reward - 2;
+//        }
 
         // awarding for more empty cells
         //if (this.currentGameGrid.emptyCount > lastGameGrid.emptyCount) {
         //    reward += (16 / (lastGameGrid.emptyCount - this.currentGameGrid.emptyCount));
         //}
 
-        reward += scoreDelta; // / 1000;
+        //reward += scoreDelta; // / 1000;
 
         if (this.gameManager.won) {
             reward += 2048;
         }
 
-        if (this.gameManager.over) {
-            var _this = this;
-            setTimeout(function() {
-                _this.gameManager.storageManager.setAIState(_this.brain.value_net.toJSON());
-                document.getElementsByClassName('retry-button')[0].click();
-            }, 5);
-            //reward = -10;
-        }
+//        if (this.gameManager.over) {
+//            var _this = this;
+//            setTimeout(function() {
+//                _this.gameManager.storageManager.setAIState(_this.brain.value_net.toJSON());
+//                document.getElementsByClassName('retry-button')[0].click();
+//            }, 5);
+//            //reward = -10;
+//        }
 
         console.log('reward: ' + reward);
         this.brain.backward(reward);
