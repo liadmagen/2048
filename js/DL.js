@@ -139,6 +139,11 @@ DeepLearning.prototype = {
                 break;
             case 3:
                 this.simulateKeyPress(40);
+                break;
+            case 4:
+                document.getElementsByClassName('restart-button')[0].click();
+                break;
+                
         }
         this.backward(this.currentGameGrid);
         this.draw_stats();
