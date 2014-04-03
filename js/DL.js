@@ -163,7 +163,7 @@ DeepLearning.prototype = {
         this.currentGameGrid = this.convertGrid(this.gameManager.grid);
 
         if (score > 0) {
-            reward += Math.log(score) / Math.log(2);
+            reward = Math.log(Math.log(score) / Math.log(2));
         }
 
         if (score >= maxScore) {
@@ -172,10 +172,12 @@ DeepLearning.prototype = {
 
         if (lastGameGrid.max < this.currentGameGrid.max) {
             var delta = (this.currentGameGrid.max - lastGameGrid.max);
-            reward += Math.log(delta) / Math.log(2);
+            reward += Math.log(Math.log(delta) / Math.log(2)) + 1;
         }
 
-        if (lastGameGrid.emptyCount !== 0)
+        if (lastGameGrid.emptyCount !== 0 && score === 0 || lastGameGrid.newGrid.compare(this.currentGameGrid.newGrid)) {
+            reward = 1 / 100000000;
+        }
 
 //        var scoreDelta = this.gameManager.score - this.lastScore;
 //        if (scoreDelta <= 0 && score === 0 && lastGameGrid.emptyCount > 0) {
