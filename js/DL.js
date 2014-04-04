@@ -176,7 +176,7 @@ DeepLearning.prototype = {
         }
 
         if (lastGameGrid.emptyCount !== 0 && score === 0 || lastGameGrid.newGrid.compare(this.currentGameGrid.newGrid)) {
-            reward = 1 / 100000000;
+            reward = 1e-6;
         }
 
 //        var scoreDelta = this.gameManager.score - this.lastScore;
