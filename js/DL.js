@@ -47,7 +47,8 @@ function DeepLearning(gameManager) {
 
     // options for the Temporal Difference learner that trains the above net
     // by backpropping the temporal difference learning rule.
-    var tdtrainer_options = {learning_rate:0.001, momentum:0.0, batch_size:64, l2_decay:0.01};
+    //var tdtrainer_options = {learning_rate:0.001, momentum:0.0, batch_size:64, l2_decay:0.01};
+    var tdtrainer_options = {learning_rate:1.0, method: 'adadelta', eps: 1e-6, ro:0.95, batch_size:64, l2_decay:0.001}
 
     var opt = {};
     opt.temporal_window = temporal_window;
@@ -179,6 +180,8 @@ DeepLearning.prototype = {
 
         if (lastGameGrid.emptyCount !== 0 && score === 0 && (this.currentGameGrid.max - lastGameGrid.max) < 0 || lastGameGrid.newGrid.compare(this.currentGameGrid.newGrid)) {
             reward = 1e-8;
+//        if (lastGameGrid.emptyCount !== 0 && score === 0 || lastGameGrid.newGrid.compare(this.currentGameGrid.newGrid)) {
+//            reward = 1e-6;
         }
 
 //        var scoreDelta = this.gameManager.score - this.lastScore;
