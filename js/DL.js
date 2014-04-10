@@ -41,6 +41,8 @@ function DeepLearning(gameManager) {
     layer_defs.push({type:'fc', num_neurons: 50, activation:'relu'});
     layer_defs.push({type:'fc', num_neurons: 50, activation:'relu'});
     layer_defs.push({type:'fc', num_neurons: 50, activation:'relu'});
+    layer_defs.push({type:'fc', num_neurons: 50, activation:'relu'});
+    layer_defs.push({type:'fc', num_neurons: 50, activation:'relu'});
     layer_defs.push({type:'regression', num_neurons:num_actions});
 
     // options for the Temporal Difference learner that trains the above net
@@ -158,12 +160,12 @@ DeepLearning.prototype = {
 
     backward: function (lastGameGrid) {
         var score = this.gameManager.score;
-        var reward = 0;
+        var reward = 0.5;
         var maxScore = this.gameManager.storageManager.getBestScore();
         this.currentGameGrid = this.convertGrid(this.gameManager.grid);
 
         if (score > 0) {
-            reward = Math.log(Math.log(score) / Math.log(2));
+            reward = score; //Math.log(Math.log(score) / Math.log(2));
         }
 
         if (score >= maxScore) {
@@ -175,8 +177,8 @@ DeepLearning.prototype = {
             reward += Math.log(Math.log(delta) / Math.log(2)) + 1;
         }
 
-        if (lastGameGrid.emptyCount !== 0 && score === 0 || lastGameGrid.newGrid.compare(this.currentGameGrid.newGrid)) {
-            reward = 1 / 100000000;
+        if (lastGameGrid.emptyCount !== 0 && score === 0 && (this.currentGameGrid.max - lastGameGrid.max) < 0 || lastGameGrid.newGrid.compare(this.currentGameGrid.newGrid)) {
+            reward = 1e-8;
         }
 
 //        var scoreDelta = this.gameManager.score - this.lastScore;
@@ -213,14 +215,14 @@ DeepLearning.prototype = {
             reward += 2048;
         }
 
-//        if (this.gameManager.over) {
-//            var _this = this;
+        if (this.gameManager.over) {
+            var _this = this;
 //            setTimeout(function() {
-//                _this.gameManager.storageManager.setAIState(_this.brain.value_net.toJSON());
+                _this.gameManager.storageManager.setAIState(_this.brain.value_net.toJSON());
 //                document.getElementsByClassName('retry-button')[0].click();
 //            }, 5);
-//            //reward = -10;
-//        }
+            //reward = -10;
+        }
 
         console.log('reward: ' + reward);
         this.brain.backward(reward);
